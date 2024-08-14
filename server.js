@@ -1,94 +1,74 @@
+import fs from 'node:fs/promises'
 import express from 'express'
-import getPort, { portNumbers } from 'get-port'
 
-const isTest = process.env.NODE_ENV === 'test' || !!process.env.VITE_TEST_BUILD
+// Constants
+const isProduction = process.env.NODE_ENV === 'production'
+const port = process.env.PORT || 3000
+const base = process.env.BASE || '/'
 
-export async function createServer(
-  root = process.cwd(),
-  isProd = process.env.NODE_ENV === 'production',
-  hmrPort,
-) {
-  const app = express()
+// Cached production assets
+const templateHtml = isProduction
+    ? await fs.readFile('./dist/client/index.html', 'utf-8')
+    : ''
 
-  /**
-   * @type {import('vite').ViteDevServer}
-   */
-  let vite
-  if (!isProd) {
-    vite = await (
-      await import('vite')
-    ).createServer({
-      root,
-      logLevel: isTest ? 'error' : 'info',
-      server: {
-        middlewareMode: true,
-        watch: {
-          // During tests we edit the files too fast and sometimes chokidar
-          // misses change events, so enforce polling for consistency
-          usePolling: true,
-          interval: 100,
-        },
-        hmr: {
-          port: hmrPort,
-        },
-      },
-      appType: 'custom',
+const ssrManifest = isProduction
+    ? await fs.readFile('./dist/client/.vite/ssr-manifest.json', 'utf-8')
+    : undefined
+
+// Create http server
+const app = express()
+
+// Add Vite or respective production middlewares
+let vite
+if (!isProduction) {
+    const { createServer } = await import('vite')
+    vite = await createServer({
+        server: { middlewareMode: true },
+        appType: 'custom',
+        base,
     })
-    // use vite's connect instance as middleware
     app.use(vite.middlewares)
-  } else {
-    const compression = (await import('compression')).default;
-    app.use(compression());
-  }
+} else {
+    const compression = (await import('compression')).default
+    const sirv = (await import('sirv')).default
+    app.use(compression())
+    app.use(base, sirv('./dist/client', { extensions: [] }))
+}
 
-  app.use('*', async (req, res) => {
+// Serve HTML
+app.use('*', async (req, res) => {
     try {
-      const url = req.originalUrl
+        const url = req.originalUrl
 
-      if (url.includes('.')) {
-        console.warn(`${url} is not valid router path`)
-        res.status(404)
-        res.end(`${url} is not valid router path`)
-        return
-      }
-
-      // Extract the head from vite's index transformation hook
-      let viteHead = !isProd
-        ? await vite.transformIndexHtml(
-            url,
-            `<html><head></head><body></body></html>`,
-          )
-        : ''
-
-      viteHead = viteHead.substring(
-        viteHead.indexOf('<head>') + 6,
-        viteHead.indexOf('</head>'),
-      )
-
-      const entry = await (async () => {
-        if (!isProd) {
-          return vite.ssrLoadModule('/src/entry-server.tsx')
+        let template
+        let render
+        if (!isProduction) {
+            // Always read fresh template in development
+            template = await fs.readFile('./index.html', 'utf-8')
+            template = await vite.transformIndexHtml(url, template)
+            render = (await vite.ssrLoadModule('./src/entry-server.tsx')).render
         } else {
-          return import('./dist/server/entry-server.js')
+            template = templateHtml
+            render = (await import('./dist/server/entry-server.js')).render
         }
-      })()
 
-      console.info('Rendering: ', url, '...')
-      entry.render({ req, res, url, head: viteHead })
+        const rendered = await render({ url, isProduction }, ssrManifest)
+
+        const html = template
+            .replace(`<!--app-head-->`, rendered.head ?? '')
+            .replace(`<!--app-html-->`, rendered.html ?? '')
+
+        res.status(200).set({ 'Content-Type': 'text/html' }).send(html)
     } catch (e) {
-      !isProd && vite.ssrFixStacktrace(e)
-      console.info(e.stack)
-      res.status(500).end(e.stack)
+        vite?.ssrFixStacktrace(e)
+        console.log(e.stack)
+        res.status(500).end(e.stack)
     }
-  })
+})
 
-  return { app, vite }
-}
+// Start http server
+app.listen(port, () => {
+    console.log(`Server started at http://localhost:${port}`)
+})
 
-if (!isTest) {
-  createServer().then(async ({ app }) =>
-    app.listen(await getPort({ port: portNumbers(3000, 3100) }), () => {
-      console.info('Client Server: http://localhost:3000')
-    }),
-  )
-}
+export default app
