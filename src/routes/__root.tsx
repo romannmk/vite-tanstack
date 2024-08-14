@@ -1,0 +1,81 @@
+import { TanStackRouterDevtools } from '@tanstack/router-devtools'
+import {
+  Link,
+  Outlet,
+  createRootRouteWithContext,
+} from '@tanstack/react-router'
+import { Body, Head, Html, Meta, Scripts } from '@tanstack/start'
+import type { RouterContext } from '@/types/routerContext'
+
+export const Route = createRootRouteWithContext<RouterContext>()({
+  meta: () => [
+    {
+      title: 'TanStack Router SSR Basic File Based',
+    },
+    {
+      charSet: 'UTF-8',
+    },
+    {
+      name: 'viewport',
+      content: 'width=device-width, initial-scale=1.0',
+    },
+  ],
+  links: () => [{
+    rel: "stylesheet",
+    href: "/src/index.css"
+  }],
+  scripts: () => [
+    {
+      type: 'module',
+      children: `import RefreshRuntime from "/@react-refresh"
+RefreshRuntime.injectIntoGlobalHook(window)
+window.$RefreshReg$ = () => {}
+window.$RefreshSig$ = () => (type) => type
+window.__vite_plugin_react_preamble_installed__ = true`,
+    },
+    {
+      type: 'module',
+      src: '/@vite/client',
+    },
+    {
+      type: 'module',
+      src: '/src/entry-client.tsx',
+    },
+  ],
+  component: RootComponent,
+})
+
+function RootComponent() {
+  return (
+    <Html lang="en">
+      <Head>
+        <Meta />
+      </Head>
+      <Body>
+        <div className="p-2 flex gap-2 text-lg">
+          <Link
+            to="/"
+            activeProps={{
+              className: 'font-bold',
+            }}
+            activeOptions={{ exact: true }}
+          >
+            Home
+          </Link>
+          <Link
+            to="/posts"
+            activeProps={{
+              className: 'font-bold',
+            }}
+            activeOptions={{ exact: true }}
+          >
+            Posts
+          </Link>
+        </div>
+        <Outlet />
+        <TanStackRouterDevtools position="bottom-right" />
+        <Scripts />
+      </Body>
+    </Html>
+  )
+}
