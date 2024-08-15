@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "devCommand": "node server.js",
+  "rewrites": [{ "source": "/(.*)", "destination": "/api" }],
+  "functions": {
+    "api/index.js": {
+      "includeFiles": "dist/**"
+    }
+  }
+}
