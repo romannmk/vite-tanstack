@@ -3,7 +3,7 @@
   "devCommand": "node server.js",
   "rewrites": [{ "source": "/(.*)", "destination": "/api" }],
   "functions": {
-    "api/index.js": {
+    "server.js": {
       "includeFiles": "dist/**"
     }
   }
