@@ -13,6 +13,9 @@ export const Route = createFileRoute('/_layout/posts')({
     queryClient.fetchQuery(postsQueryOptions),
   component: PostsComponent,
   errorComponent: () => <div>Error loading posts</div>,
+  pendingComponent: () => <div>Loading...</div>,
+  notFoundComponent: () => <div>Not Found</div>,
+  preloadStaleTime: 1000,
 })
 
 function PostsComponent() {

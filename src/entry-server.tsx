@@ -1,8 +1,10 @@
 import ReactDOMServer from 'react-dom/server'
-import { createMemoryHistory } from '@tanstack/react-router'
-import { StartServer } from '@tanstack/start/server'
+import {
+  AnyRouter,
+  createMemoryHistory,
+  RouterProvider,
+} from '@tanstack/react-router'
 import { createRouter } from './router'
-import { StrictMode } from 'react'
 
 type Opts = {
   url: string
@@ -25,9 +27,7 @@ export async function render(opts: Opts) {
   await router.load()
 
   const html = ReactDOMServer.renderToString(
-    <StrictMode>
-      <StartServer router={router} />
-    </StrictMode>
+    <RouterProvider router={router as AnyRouter} />
   )
 
   return { html }
