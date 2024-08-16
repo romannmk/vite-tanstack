@@ -17,6 +17,7 @@ export function createRouter() {
     context: {
       queryClient,
     },
+    defaultPreload: 'intent',
     dehydrate: () => {
       return {
         queryClientState: dehydrate(queryClient),
@@ -25,14 +26,9 @@ export function createRouter() {
     hydrate: (dehydrated) => {
       hydrate(queryClient, dehydrated.queryClientState)
     },
-    defaultPreload: 'intent',
-    Wrap: ({ children }: { children: ReactNode }) => {
-      return (
-        <QueryClientProvider client={queryClient}>
-          {children}
-        </QueryClientProvider>
-      )
-    },
+    Wrap: ({ children }: { children: ReactNode }) => (
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    ),
   })
 }
 

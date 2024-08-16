@@ -1,5 +1,4 @@
 import { postsQueryOptions } from '@/queries/posts'
-import { useSuspenseQuery } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
 
 export type PostType = {
@@ -8,9 +7,9 @@ export type PostType = {
   body: string
 }
 
-export const Route = createFileRoute('/_layout/posts')({
+export const Route = createFileRoute('/_navLayout/posts')({
   loader: ({ context: { queryClient } }) =>
-    queryClient.ensureQueryData(postsQueryOptions),
+    queryClient.fetchQuery(postsQueryOptions),
   component: PostsComponent,
   errorComponent: () => <div>Error loading posts</div>,
   pendingComponent: () => <div>Loading...</div>,
@@ -18,7 +17,7 @@ export const Route = createFileRoute('/_layout/posts')({
 })
 
 function PostsComponent() {
-  const { data, isFetching } = useSuspenseQuery(postsQueryOptions)
+  const data = Route.useLoaderData()
 
   return (
     <div className="p-2 flex gap-2 flex-col">
@@ -32,7 +31,6 @@ function PostsComponent() {
         })}
       </ul>
       <br />
-      {isFetching && 'Fetching...'}
     </div>
   )
 }

@@ -11,51 +11,51 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as LayoutImport } from './routes/_layout'
-import { Route as LayoutIndexImport } from './routes/_layout/index'
-import { Route as LayoutPostsImport } from './routes/_layout/posts'
+import { Route as NavLayoutImport } from './routes/_navLayout'
+import { Route as NavLayoutIndexImport } from './routes/_navLayout/index'
+import { Route as NavLayoutPostsImport } from './routes/_navLayout/posts'
 
 // Create/Update Routes
 
-const LayoutRoute = LayoutImport.update({
-  id: '/_layout',
+const NavLayoutRoute = NavLayoutImport.update({
+  id: '/_navLayout',
   getParentRoute: () => rootRoute,
 } as any)
 
-const LayoutIndexRoute = LayoutIndexImport.update({
+const NavLayoutIndexRoute = NavLayoutIndexImport.update({
   path: '/',
-  getParentRoute: () => LayoutRoute,
+  getParentRoute: () => NavLayoutRoute,
 } as any)
 
-const LayoutPostsRoute = LayoutPostsImport.update({
+const NavLayoutPostsRoute = NavLayoutPostsImport.update({
   path: '/posts',
-  getParentRoute: () => LayoutRoute,
+  getParentRoute: () => NavLayoutRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/_layout': {
-      id: '/_layout'
+    '/_navLayout': {
+      id: '/_navLayout'
       path: ''
       fullPath: ''
-      preLoaderRoute: typeof LayoutImport
+      preLoaderRoute: typeof NavLayoutImport
       parentRoute: typeof rootRoute
     }
-    '/_layout/posts': {
-      id: '/_layout/posts'
+    '/_navLayout/posts': {
+      id: '/_navLayout/posts'
       path: '/posts'
       fullPath: '/posts'
-      preLoaderRoute: typeof LayoutPostsImport
-      parentRoute: typeof LayoutImport
+      preLoaderRoute: typeof NavLayoutPostsImport
+      parentRoute: typeof NavLayoutImport
     }
-    '/_layout/': {
-      id: '/_layout/'
+    '/_navLayout/': {
+      id: '/_navLayout/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof LayoutIndexImport
-      parentRoute: typeof LayoutImport
+      preLoaderRoute: typeof NavLayoutIndexImport
+      parentRoute: typeof NavLayoutImport
     }
   }
 }
@@ -63,7 +63,10 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 export const routeTree = rootRoute.addChildren({
-  LayoutRoute: LayoutRoute.addChildren({ LayoutPostsRoute, LayoutIndexRoute }),
+  NavLayoutRoute: NavLayoutRoute.addChildren({
+    NavLayoutPostsRoute,
+    NavLayoutIndexRoute,
+  }),
 })
 
 /* prettier-ignore-end */
@@ -74,23 +77,23 @@ export const routeTree = rootRoute.addChildren({
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/_layout"
+        "/_navLayout"
       ]
     },
-    "/_layout": {
-      "filePath": "_layout.tsx",
+    "/_navLayout": {
+      "filePath": "_navLayout.tsx",
       "children": [
-        "/_layout/posts",
-        "/_layout/"
+        "/_navLayout/posts",
+        "/_navLayout/"
       ]
     },
-    "/_layout/posts": {
-      "filePath": "_layout/posts.tsx",
-      "parent": "/_layout"
+    "/_navLayout/posts": {
+      "filePath": "_navLayout/posts.tsx",
+      "parent": "/_navLayout"
     },
-    "/_layout/": {
-      "filePath": "_layout/index.tsx",
-      "parent": "/_layout"
+    "/_navLayout/": {
+      "filePath": "_navLayout/index.tsx",
+      "parent": "/_navLayout"
     }
   }
 }

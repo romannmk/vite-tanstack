@@ -5,7 +5,7 @@ const nav = [
   { to: '/posts', label: 'Posts' },
 ]
 
-export const Route = createFileRoute('/_layout')({
+export const Route = createFileRoute('/_navLayout')({
   component: LayoutComponent,
 })
 

@@ -9,14 +9,7 @@ export type PostType = {
 }
 
 const queryFn = async () => {
-  // await new Promise((r) => setTimeout(r, 3000))
-  console.log('REQUEST', { isServer: typeof window === 'undefined' })
-
-  if (typeof window === 'undefined') {
-    return axios.get<PostType[]>(`${API_URL}/products`).then(({ data }) => data)
-  } else {
-    console.log('CLIENT SIDE')
-  }
+  return axios.get<PostType[]>(`${API_URL}/products`).then(({ data }) => data)
 }
 
 export const postsQueryOptions = queryOptions({
