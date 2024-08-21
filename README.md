@@ -59,9 +59,9 @@ vite-tanstack/
 
 The following npm scripts are available:
 
-- `npm run dev`: Starts the development server
-- `npm run build`: Builds the production-ready application
-- `npm run serve`: Serves the production build locally
+- `npm run dev` - Starts the development server
+- `npm run build` - Builds the production-ready application
+- `npm run serve` - Serves the production build locally
 
 ### Contributing
 
