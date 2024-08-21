@@ -5,16 +5,13 @@ import {
   RouterProvider,
 } from '@tanstack/react-router'
 import { createRouter } from './router'
+import './fetch-polyfill'
 
-type Opts = {
-  url: string
-}
-
-export async function render(opts: Opts) {
+export async function render(url: string) {
   const router = createRouter()
 
   const memoryHistory = createMemoryHistory({
-    initialEntries: [opts.url],
+    initialEntries: [url],
   })
 
   router.update({
