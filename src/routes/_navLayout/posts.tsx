@@ -22,15 +22,12 @@ function PostsComponent() {
   return (
     <div className="p-2 flex gap-2 flex-col">
       <ul className="list-disc pl-4">
-        {data?.map((post) => {
-          return (
-            <li key={post.id} className="whitespace-nowrap">
-              <div>{post.title.substring(0, 20)}</div>
-            </li>
-          )
-        })}
+        {data?.map((post) => (
+          <li key={post.id} className="whitespace-nowrap">
+            <div>{post.title.substring(0, 20)}</div>
+          </li>
+        ))}
       </ul>
-      <br />
     </div>
   )
 }

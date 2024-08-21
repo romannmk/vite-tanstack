@@ -9,6 +9,7 @@ This project demonstrates how to set up server-side rendering (SSR) with Vite an
 - Server-side rendering (SSR) for improved performance and SEO
 - TanStack Router for type-safe routing
 - TanStack React Query for efficient data fetching, caching, and state management
+- Tailwind CSS for utility-first styling and rapid UI development
 
 ### Getting Started
 
