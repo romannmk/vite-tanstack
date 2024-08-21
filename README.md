@@ -65,7 +65,7 @@ The following npm scripts are available:
 
 ### Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions are welcome! Please feel free to submit a Pull Request or contact me by email.
 
 ### License
 
