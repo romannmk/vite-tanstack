@@ -8,7 +8,10 @@ export type PostType = {
   body: string
 }
 
+const delay = (n = 500) => new Promise((r) => setTimeout(r, n))
+
 const queryFn = async () => {
+  await delay(5000)
   return axios.get<PostType[]>(`${API_URL}/products`).then(({ data }) => data)
 }
 

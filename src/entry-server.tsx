@@ -1,4 +1,5 @@
-import ReactDOMServer from 'react-dom/server'
+import type express from 'express'
+import { renderToPipeableStream } from 'react-dom/server'
 import {
   AnyRouter,
   createMemoryHistory,
@@ -7,11 +8,11 @@ import {
 import { createRouter } from './router'
 import './fetch-polyfill'
 
-export async function render(url: string) {
+export async function render(req: express.Request, res: express.Response) {
   const router = createRouter()
 
   const memoryHistory = createMemoryHistory({
-    initialEntries: [url],
+    initialEntries: [req.originalUrl],
   })
 
   router.update({
@@ -23,9 +24,31 @@ export async function render(url: string) {
 
   await router.load()
 
-  const html = ReactDOMServer.renderToString(
-    <RouterProvider router={router as AnyRouter} />
-  )
+  let shellRendered = false
 
-  return { html }
+  const { pipe } = renderToPipeableStream(
+    <RouterProvider router={router as AnyRouter} />,
+    {
+      bootstrapModules: ['/src/entry-client.tsx'],
+      onShellReady() {
+        shellRendered = true
+        res.statusCode = 200
+        res.setHeader('Content-type', 'text/html')
+        pipe(res)
+      },
+      onShellError(error) {
+        res.statusCode = 500
+        res.send(`<!doctype html><p>An error ocurred:</p><pre>${error}</pre>`)
+      },
+      onError(error: unknown) {
+        res.statusCode = 500
+        // Log streaming rendering errors from inside the shell.  Don't log
+        // errors encountered during initial shell rendering since they'll
+        // reject and get logged in handleDocumentRequest.
+        if (shellRendered) {
+          console.error(error)
+        }
+      },
+    }
+  )
 }

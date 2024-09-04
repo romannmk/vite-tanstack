@@ -9,7 +9,7 @@ export type PostType = {
 
 export const Route = createFileRoute('/_navLayout/posts')({
   loader: ({ context: { queryClient } }) =>
-    queryClient.fetchQuery(postsQueryOptions),
+    queryClient.ensureQueryData(postsQueryOptions),
   component: PostsComponent,
   errorComponent: () => <div>Error loading posts</div>,
   pendingComponent: () => <div>Loading...</div>,
