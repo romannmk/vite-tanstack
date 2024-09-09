@@ -12,7 +12,7 @@ const delay = (n = 500) => new Promise((r) => setTimeout(r, n))
 
 const queryFn = async () => {
   await delay(5000)
-  return axios.get<PostType[]>(`${API_URL}/products`).then(({ data }) => data)
+  return axios.get<PostType[]>(`${API_URL}/products`)
 }
 
 export const postsQueryOptions = queryOptions({

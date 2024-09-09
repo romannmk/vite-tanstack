@@ -11,7 +11,6 @@ function RootComponent() {
       <head
         dangerouslySetInnerHTML={{
           __html: `
-            <script type="module" src="/@vite/client"></script>
             <link rel="icon" type="image/svg+xml" href="/vite.svg" />
             <meta name="viewport" content="width=device-width, initial-scale=1.0" />
             <link rel="stylesheet" href="/src/index.css" />
@@ -26,18 +25,8 @@ function RootComponent() {
           `,
         }}
       ></head>
-
       <body>
         <Outlet />
-        {/*
-         * TODO: Fix Vite upstream to allow this tag to be injected via `bootstrapModules` in `pipeToWritableStream` instead.
-         * Currently, it breaks the JSX Runtime.
-         */}
-        {import.meta.env.DEV && (
-          <>
-            <script type="module" src="/src/entry-client.tsx"></script>
-          </>
-        )}
       </body>
     </html>
   )
