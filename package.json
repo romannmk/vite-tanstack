@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "node server",
+    "dev": "vite",
     "build": "npm run build:client && npm run build:server",
     "build:client": "vite build --outDir dist/client",
     "build:server": "vite build --ssr src/entry-server.tsx --outDir dist/server",
@@ -14,9 +14,10 @@
     "prepare": "husky"
   },
   "dependencies": {
-    "@tanstack/react-query": "^5.54.1",
-    "@tanstack/react-router": "^1.53.1",
-    "@tanstack/router-plugin": "^1.54.0",
+    "@tanstack/react-query": "^5.55.0",
+    "@tanstack/react-router": "^1.56.1",
+    "@tanstack/router-plugin": "^1.56.1",
+    "@tanstack/start": "^1.56.1",
     "axios": "^1.7.7",
     "node-fetch": "^3.3.2",
     "react": "^18.3.1",
@@ -24,8 +25,8 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.9.1",
-    "@tanstack/react-query-devtools": "^5.54.1",
-    "@tanstack/router-devtools": "^1.53.1",
+    "@tanstack/react-query-devtools": "^5.55.0",
+    "@tanstack/router-devtools": "^1.56.1",
     "@types/express": "^4.17.21",
     "@types/react": "^18.3.5",
     "@types/react-dom": "^18.3.0",

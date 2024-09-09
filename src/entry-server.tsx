@@ -24,14 +24,11 @@ export async function render(req: express.Request, res: express.Response) {
 
   await router.load()
 
-  let shellRendered = false
-
-  const { pipe } = renderToPipeableStream(
+  const { pipe, abort } = renderToPipeableStream(
     <RouterProvider router={router as AnyRouter} />,
     {
       bootstrapModules: ['/src/entry-client.tsx'],
       onShellReady() {
-        shellRendered = true
         res.statusCode = 200
         res.setHeader('Content-type', 'text/html')
         pipe(res)
@@ -40,15 +37,8 @@ export async function render(req: express.Request, res: express.Response) {
         res.statusCode = 500
         res.send(`<!doctype html><p>An error ocurred:</p><pre>${error}</pre>`)
       },
-      onError(error: unknown) {
-        res.statusCode = 500
-        // Log streaming rendering errors from inside the shell.  Don't log
-        // errors encountered during initial shell rendering since they'll
-        // reject and get logged in handleDocumentRequest.
-        if (shellRendered) {
-          console.error(error)
-        }
-      },
     }
   )
+
+  setTimeout(abort, 10_000)
 }

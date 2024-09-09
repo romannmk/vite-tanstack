@@ -62,12 +62,57 @@ declare module '@tanstack/react-router' {
 
 // Create and export the route tree
 
-export const routeTree = rootRoute.addChildren({
-  NavLayoutRoute: NavLayoutRoute.addChildren({
-    NavLayoutPostsRoute,
-    NavLayoutIndexRoute,
-  }),
-})
+interface NavLayoutRouteChildren {
+  NavLayoutPostsRoute: typeof NavLayoutPostsRoute
+  NavLayoutIndexRoute: typeof NavLayoutIndexRoute
+}
+
+const NavLayoutRouteChildren: NavLayoutRouteChildren = {
+  NavLayoutPostsRoute: NavLayoutPostsRoute,
+  NavLayoutIndexRoute: NavLayoutIndexRoute,
+}
+
+const NavLayoutRouteWithChildren = NavLayoutRoute._addFileChildren(
+  NavLayoutRouteChildren,
+)
+
+interface FileRoutesByFullPath {
+  '': typeof NavLayoutRouteWithChildren
+  '/posts': typeof NavLayoutPostsRoute
+  '/': typeof NavLayoutIndexRoute
+}
+
+interface FileRoutesByTo {
+  '/posts': typeof NavLayoutPostsRoute
+  '/': typeof NavLayoutIndexRoute
+}
+
+interface FileRoutesById {
+  '/_navLayout': typeof NavLayoutRouteWithChildren
+  '/_navLayout/posts': typeof NavLayoutPostsRoute
+  '/_navLayout/': typeof NavLayoutIndexRoute
+}
+
+interface FileRouteTypes {
+  fileRoutesByFullPath: FileRoutesByFullPath
+  fullPaths: '' | '/posts' | '/'
+  fileRoutesByTo: FileRoutesByTo
+  to: '/posts' | '/'
+  id: '/_navLayout' | '/_navLayout/posts' | '/_navLayout/'
+  fileRoutesById: FileRoutesById
+}
+
+interface RootRouteChildren {
+  NavLayoutRoute: typeof NavLayoutRouteWithChildren
+}
+
+const rootRouteChildren: RootRouteChildren = {
+  NavLayoutRoute: NavLayoutRouteWithChildren,
+}
+
+export const routeTree = rootRoute
+  ._addFileChildren(rootRouteChildren)
+  ._addFileTypes<FileRouteTypes>()
 
 /* prettier-ignore-end */
 
