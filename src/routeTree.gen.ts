@@ -13,7 +13,7 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as NavLayoutImport } from './routes/_navLayout'
 import { Route as NavLayoutIndexImport } from './routes/_navLayout/index'
-import { Route as NavLayoutPostsImport } from './routes/_navLayout/posts'
+import { Route as NavLayoutProductsImport } from './routes/_navLayout/products'
 
 // Create/Update Routes
 
@@ -27,8 +27,8 @@ const NavLayoutIndexRoute = NavLayoutIndexImport.update({
   getParentRoute: () => NavLayoutRoute,
 } as any)
 
-const NavLayoutPostsRoute = NavLayoutPostsImport.update({
-  path: '/posts',
+const NavLayoutProductsRoute = NavLayoutProductsImport.update({
+  path: '/products',
   getParentRoute: () => NavLayoutRoute,
 } as any)
 
@@ -43,11 +43,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NavLayoutImport
       parentRoute: typeof rootRoute
     }
-    '/_navLayout/posts': {
-      id: '/_navLayout/posts'
-      path: '/posts'
-      fullPath: '/posts'
-      preLoaderRoute: typeof NavLayoutPostsImport
+    '/_navLayout/products': {
+      id: '/_navLayout/products'
+      path: '/products'
+      fullPath: '/products'
+      preLoaderRoute: typeof NavLayoutProductsImport
       parentRoute: typeof NavLayoutImport
     }
     '/_navLayout/': {
@@ -63,12 +63,12 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 interface NavLayoutRouteChildren {
-  NavLayoutPostsRoute: typeof NavLayoutPostsRoute
+  NavLayoutProductsRoute: typeof NavLayoutProductsRoute
   NavLayoutIndexRoute: typeof NavLayoutIndexRoute
 }
 
 const NavLayoutRouteChildren: NavLayoutRouteChildren = {
-  NavLayoutPostsRoute: NavLayoutPostsRoute,
+  NavLayoutProductsRoute: NavLayoutProductsRoute,
   NavLayoutIndexRoute: NavLayoutIndexRoute,
 }
 
@@ -78,27 +78,27 @@ const NavLayoutRouteWithChildren = NavLayoutRoute._addFileChildren(
 
 interface FileRoutesByFullPath {
   '': typeof NavLayoutRouteWithChildren
-  '/posts': typeof NavLayoutPostsRoute
+  '/products': typeof NavLayoutProductsRoute
   '/': typeof NavLayoutIndexRoute
 }
 
 interface FileRoutesByTo {
-  '/posts': typeof NavLayoutPostsRoute
+  '/products': typeof NavLayoutProductsRoute
   '/': typeof NavLayoutIndexRoute
 }
 
 interface FileRoutesById {
   '/_navLayout': typeof NavLayoutRouteWithChildren
-  '/_navLayout/posts': typeof NavLayoutPostsRoute
+  '/_navLayout/products': typeof NavLayoutProductsRoute
   '/_navLayout/': typeof NavLayoutIndexRoute
 }
 
 interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '' | '/posts' | '/'
+  fullPaths: '' | '/products' | '/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/posts' | '/'
-  id: '/_navLayout' | '/_navLayout/posts' | '/_navLayout/'
+  to: '/products' | '/'
+  id: '/_navLayout' | '/_navLayout/products' | '/_navLayout/'
   fileRoutesById: FileRoutesById
 }
 
@@ -128,12 +128,12 @@ export const routeTree = rootRoute
     "/_navLayout": {
       "filePath": "_navLayout.tsx",
       "children": [
-        "/_navLayout/posts",
+        "/_navLayout/products",
         "/_navLayout/"
       ]
     },
-    "/_navLayout/posts": {
-      "filePath": "_navLayout/posts.tsx",
+    "/_navLayout/products": {
+      "filePath": "_navLayout/products.tsx",
       "parent": "/_navLayout"
     },
     "/_navLayout/": {

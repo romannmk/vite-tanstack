@@ -2,7 +2,7 @@ import { Link, Outlet, createFileRoute } from '@tanstack/react-router'
 
 const nav = [
   { to: '/', label: 'Home' },
-  { to: '/posts', label: 'Posts' },
+  { to: '/products', label: 'Products' },
 ]
 
 export const Route = createFileRoute('/_navLayout')({

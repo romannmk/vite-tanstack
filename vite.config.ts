@@ -15,7 +15,7 @@ function ssrPlugin() {
 
     configureServer(server: ViteDevServer) {
       server.middlewares.use(async (req, res, next) => {
-        if (!['/', '/posts'].includes(req.url!)) {
+        if (!['/', '/products'].includes(req.url!)) {
           return next()
         }
 
